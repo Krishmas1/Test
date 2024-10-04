@@ -1,0 +1,13 @@
+---
+title: "Basic R -Inclass- Codes"
+format: html
+editor: visual
+---
+
+## df \<- read.csv('<https://bryantstats.github.io/math421/data/WHO-COVID-19-global-data.csv>')
+
+```{r}
+df <- read.csv('https://bryantstats.github.io/math421/data/WHO-COVID-19-global-data.csv')
+```
+
+names(df)
