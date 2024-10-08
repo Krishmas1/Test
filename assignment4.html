@@ -11,7 +11,7 @@
 
 
 
-<title>README</title>
+<title>Assignment 4 - Data Wrangging with dplyr</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -348,16 +348,455 @@ display: none;
 
 
 
+<h1 class="title toc-ignore">Assignment 4 - Data Wrangging with
+<code>dplyr</code></h1>
 
 </div>
 
 
-<div id="test" class="section level1">
-<h1>Test</h1>
-<p>First Assignment: <a href="Test.html">Test</a>,</p>
-<p><a href="assignment1.html">assignment1</a></p>
-<p><a href="assignment2.html">assignment2</a></p>
-<p><a href="assignment4(1).html">assignment4 (1)</a></p>
+<p><strong><em>How to do it?</em></strong>:</p>
+<ul>
+<li><p>Open the Rmarkdown file of this assignment (<a href="assignment4.Rmd">link</a>) in Rstudio.</p></li>
+<li><p>Right under each <strong>question</strong>, insert a code chunk
+(you can use the hotkey <code>Ctrl + Alt + I</code> to add a code chunk)
+and code the solution for the question.</p></li>
+<li><p>Notice that if there is <code>eval=FALSE</code> in the first line
+of the code chunk, the chunk will not be execute.</p></li>
+<li><p><code>Knit</code> the rmarkdown file (hotkey:
+<code>Ctrl + Alt + K</code>) to export an html.</p></li>
+<li><p>Publish the html file to your Githiub Page.</p></li>
+</ul>
+<p><strong><em>Submission</em></strong>: Submit the link on Github of
+the assignment to Canvas under Assignment 4.</p>
+<hr />
+<div id="install-tidyverse-package" class="section level4">
+<h4>1. Install <code>tidyverse</code> package</h4>
+<p>An R package can be installed by <code>install.packages</code>
+function. Install <code>tidyverse</code> if you have not done so.</p>
+<pre class="r"><code>install.packages(&#39;tidyverse&#39;)</code></pre>
+<hr />
+</div>
+<div id="read_csv" class="section level4">
+<h4>2. Read_Csv</h4>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Warning: package &#39;readr&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Warning: package &#39;forcats&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Warning: package &#39;lubridate&#39; was built under R version 4.3.3</code></pre>
+<pre class="r"><code>df = read_csv(&#39;all-states-history.csv&#39;)</code></pre>
+<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
+## e.g.:
+##   dat &lt;- vroom(...)
+##   problems(dat)</code></pre>
+<hr />
+</div>
+<div id="fix-the-date-and-ceate-some-new-variables" class="section level4">
+<h4>3. Fix the date and ceate some new variables</h4>
+<p><code>lubridate</code> is a package of the <code>tidyverse</code>
+packages. We will make uses of <code>lubridate</code> in this
+question.</p>
+<ul>
+<li>Use the below codes to create <code>month</code>,
+<code>weekday</code> and <code>monthday</code> variables</li>
+</ul>
+<pre class="r"><code>library(lubridate)
+df$month = month(df$date)
+
+# day of the week
+df$weekday = wday(df$date)
+
+# day of the month
+df$monthday &lt;- mday(df$date)</code></pre>
+<hr />
+</div>
+<div id="create-new-variables-with-case_when." class="section level4">
+<h4>4. Create new variables with <code>case_when</code>.</h4>
+<p>The function <code>case_when</code> is a good option to create a new
+variable from existing variable. For example, this below codes create a
+new variable, <code>daily_death</code>, from <code>deathIncrease</code>
+variable. <code>deathIncrease</code> is the number of daily new death by
+Covid19. The new variable <code>daily_death</code> takes three values:
+low (if <code>deathIncrease</code> less than 3), medium
+(<code>deathIncrease</code> from 3 to 14), and high
+(<code>deathIncrease</code> more than 14). Please notice that this can
+also be done in a different way as shown in Assignment 3.</p>
+<pre class="r"><code>df$daily_death &lt;- case_when(
+  df$deathIncrease &lt;3 ~ &#39;low&#39;,
+  df$deathIncrease &lt;=14 ~ &#39;medium&#39;,
+  TRUE ~ &#39;high&#39;
+)
+
+df$month2 = case_when(
+  df$monthday &lt;=10 ~ &#39;low&#39;,
+  df$monthday &lt;=20 ~ &#39;medium&#39;,
+  TRUE ~ &#39;high&#39;
+)
+
+df$weekend  &lt;-  case_when(
+  df$weekday == &quot;Saturday&quot; ~ 1,
+  df$weekday == &quot;Sunday&quot; ~ 1,
+  TRUE ~ 0
+  )</code></pre>
+<ul>
+<li><p>Create variable <code>month2</code> that takes three values:
+early_month (day of the month from 1-10), mid_month (day of the month
+from 11-20), and end_month (day of the month &gt; 20).</p></li>
+<li><p>Create variable <code>weekend</code> that takes two values: 1 if
+it’s Saturday or Sunday or 0 otherwise.</p></li>
+</ul>
+<hr />
+</div>
+<div id="select-function" class="section level4">
+<h4>5. Select function</h4>
+<p>Use the select function to deselect the column
+<code>totalTestsViral</code> from the data.</p>
+<pre class="r"><code>df %&gt;% select(-totalTestsViral)</code></pre>
+<pre><code>## # A tibble: 20,780 × 46
+##    date       state death deathConfirmed deathIncrease deathProbable
+##    &lt;date&gt;     &lt;chr&gt; &lt;dbl&gt;          &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;
+##  1 2021-03-07 AK      305             NA             0            NA
+##  2 2021-03-07 AL    10148           7963            -1          2185
+##  3 2021-03-07 AR     5319           4308            22          1011
+##  4 2021-03-07 AS        0             NA             0            NA
+##  5 2021-03-07 AZ    16328          14403             5          1925
+##  6 2021-03-07 CA    54124             NA           258            NA
+##  7 2021-03-07 CO     5989           5251             3           735
+##  8 2021-03-07 CT     7704           6327             0          1377
+##  9 2021-03-07 DC     1030             NA             0            NA
+## 10 2021-03-07 DE     1473           1337             9           136
+## # ℹ 20,770 more rows
+## # ℹ 40 more variables: hospitalized &lt;dbl&gt;, hospitalizedCumulative &lt;dbl&gt;,
+## #   hospitalizedCurrently &lt;dbl&gt;, hospitalizedIncrease &lt;dbl&gt;,
+## #   inIcuCumulative &lt;dbl&gt;, inIcuCurrently &lt;dbl&gt;, negative &lt;dbl&gt;,
+## #   negativeIncrease &lt;dbl&gt;, negativeTestsAntibody &lt;dbl&gt;,
+## #   negativeTestsPeopleAntibody &lt;lgl&gt;, negativeTestsViral &lt;dbl&gt;,
+## #   onVentilatorCumulative &lt;dbl&gt;, onVentilatorCurrently &lt;dbl&gt;, …</code></pre>
+<hr />
+</div>
+<div id="pipe-operator" class="section level4">
+<h4>6. Pipe Operator ( %&gt;% )</h4>
+<p>Pipe operator offers another way to write R codes. Many times, it
+makes the codes more readable. Pipe works very well with all the
+<code>tidyverse</code> packages. Refer to <a href="../slides/4_dplyr.html#15">these slides</a> (slide 15, 16, 17 and
+18) to rewrite the below codes using pipe operator</p>
+<pre class="r"><code>x &lt;- c(1:10)
+x %&gt;% sum</code></pre>
+<pre><code>## [1] 55</code></pre>
+<pre class="r"><code># square root of x
+x %&gt;% sqrt</code></pre>
+<pre><code>##  [1] 1.000000 1.414214 1.732051 2.000000 2.236068 2.449490 2.645751 2.828427
+##  [9] 3.000000 3.162278</code></pre>
+<pre class="r"><code>x %&gt;% sum %&gt;% sqrt</code></pre>
+<pre><code>## [1] 7.416198</code></pre>
+<pre class="r"><code>x %&gt;% sqrt %&gt;% sum %&gt;% log</code></pre>
+<pre><code>## [1] 3.112104</code></pre>
+<pre class="r"><code># log base 2 of 16
+16 %&gt;% log(2)</code></pre>
+<pre><code>## [1] 4</code></pre>
+<hr />
+</div>
+<div id="combo-1-group_by-summarise" class="section level4">
+<h4>7. Combo 1: group_by + summarise</h4>
+<p>This combo is used when you want to apply a function/calculation to
+different groups of the data. For example, to calculate the average
+number of cases (<code>positiveIncrease</code>) by
+<code>dataQualityGrade</code>, we use:</p>
+<pre class="r"><code>df %&gt;% 
+  group_by(month) %&gt;% 
+  summarise(median(positiveIncrease))</code></pre>
+<pre><code>## # A tibble: 12 × 2
+##    month `median(positiveIncrease)`
+##    &lt;dbl&gt;                      &lt;dbl&gt;
+##  1     1                      1517 
+##  2     2                       520 
+##  3     3                        19 
+##  4     4                       156 
+##  5     5                       206 
+##  6     6                       224.
+##  7     7                       444 
+##  8     8                       415 
+##  9     9                       456.
+## 10    10                       771 
+## 11    11                      1596.
+## 12    12                      2080.</code></pre>
+<pre class="r"><code>df %&gt;% 
+  group_by(month2) %&gt;% 
+  summarise(mean(positiveIncrease))</code></pre>
+<pre><code>## # A tibble: 3 × 2
+##   month2 `mean(positiveIncrease)`
+##   &lt;chr&gt;                     &lt;dbl&gt;
+## 1 high                      1342.
+## 2 low                       1416.
+## 3 medium                    1395.</code></pre>
+<pre class="r"><code>df %&gt;% 
+  group_by(weekend) %&gt;% 
+  summarise(median(positiveIncrease))</code></pre>
+<pre><code>## # A tibble: 1 × 2
+##   weekend `median(positiveIncrease)`
+##     &lt;dbl&gt;                      &lt;dbl&gt;
+## 1       0                        435</code></pre>
+<ul>
+<li><p>Calculate the median number of cases
+(<code>positiveIncrease</code>) by <code>month</code></p></li>
+<li><p>Calculate the average number of cases
+(<code>positiveIncrease</code>) by <code>month2</code></p></li>
+<li><p>Calculate the median number of cases
+(<code>positiveIncrease</code>) by <code>weekend</code></p></li>
+</ul>
+<hr />
+</div>
+<div id="combo-2-filter-group_by-summarise" class="section level4">
+<h4>8. Combo 2: filter + group_by + summarise</h4>
+<p>An example: to calculate the average number of cases
+(<code>positiveIncrease</code>) in January and February separately, we
+use:</p>
+<pre class="r"><code>df %&gt;% 
+  filter(date&gt;&quot;2020-09-30&quot;,date&lt;&quot;2020-12-01&quot;) %&gt;% 
+  group_by(month) %&gt;% 
+  summarise(positve_increase = median(positiveIncrease))</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   month positve_increase
+##   &lt;dbl&gt;            &lt;dbl&gt;
+## 1    10             771 
+## 2    11            1596.</code></pre>
+<pre class="r"><code>df %&gt;% 
+  filter(date&gt;&quot;2020-08-31&quot;,date&lt;&quot;2020-12-01&quot;) %&gt;% 
+  group_by(month2) %&gt;% 
+  summarise(death = mean(death))</code></pre>
+<pre><code>## # A tibble: 3 × 2
+##   month2 death
+##   &lt;chr&gt;  &lt;dbl&gt;
+## 1 high   3973.
+## 2 low    3638.
+## 3 medium 3794.</code></pre>
+<pre class="r"><code>df %&gt;% 
+  filter(date&gt;&quot;2020-05-31&quot;,date&lt;&quot;2020-09-01&quot;) %&gt;% 
+  group_by(weekday) %&gt;% 
+  summarise(hospitalized = mean(hospitalized))</code></pre>
+<pre><code>## # A tibble: 7 × 2
+##   weekday hospitalized
+##     &lt;dbl&gt;        &lt;dbl&gt;
+## 1       1           NA
+## 2       2           NA
+## 3       3           NA
+## 4       4           NA
+## 5       5           NA
+## 6       6           NA
+## 7       7           NA</code></pre>
+<pre class="r"><code>df %&gt;% 
+  filter(date&gt;&quot;2020-05-31&quot;,date&lt;&quot;2020-09-01&quot;) %&gt;% 
+  group_by(weekend) %&gt;% 
+  summarise(hospitalized = mean(hospitalized))</code></pre>
+<pre><code>## # A tibble: 1 × 2
+##   weekend hospitalized
+##     &lt;dbl&gt;        &lt;dbl&gt;
+## 1       0           NA</code></pre>
+<pre class="r"><code>df3 = read_csv(&#39;us-states.csv&#39;)
+df3$weekdays = wday(df3$date)
+df3$weekends  &lt;-  case_when(
+  df3$weekdays == &quot;Saturday&quot; ~ 1,
+  df3$weekdays == &quot;Sunday&quot; ~ 1,
+  TRUE ~ 0)
+  df3 %&gt;% 
+  filter(date&gt;&quot;2020-12-31&quot;,date&lt;&quot;2022-01-01&quot;) %&gt;% 
+  group_by(weekdays) %&gt;% 
+  summarise(cases = median(cases))</code></pre>
+<pre><code>## # A tibble: 7 × 2
+##   weekdays   cases
+##      &lt;dbl&gt;   &lt;dbl&gt;
+## 1        1 419466 
+## 2        2 420528.
+## 3        3 421290.
+## 4        4 422261 
+## 5        5 423599 
+## 6        6 420469 
+## 7        7 418529</code></pre>
+<pre class="r"><code>  df3 %&gt;% 
+  filter(date&gt;&quot;2020-12-31&quot;,date&lt;&quot;2022-01-01&quot;) %&gt;% 
+  group_by(weekdays) %&gt;% 
+  summarise(cases = median(cases))</code></pre>
+<pre><code>## # A tibble: 7 × 2
+##   weekdays   cases
+##      &lt;dbl&gt;   &lt;dbl&gt;
+## 1        1 419466 
+## 2        2 420528.
+## 3        3 421290.
+## 4        4 422261 
+## 5        5 423599 
+## 6        6 420469 
+## 7        7 418529</code></pre>
+<pre class="r"><code>df %&gt;% 
+  filter(df$weekday == 1) %&gt;% 
+  group_by(month) %&gt;% 
+  summarise(s_death = sum(death,na.rm=TRUE)) %&gt;% 
+  arrange(-s_death)</code></pre>
+<pre><code>## # A tibble: 12 × 2
+##    month s_death
+##    &lt;dbl&gt;   &lt;dbl&gt;
+##  1     1 1940218
+##  2     2 1922368
+##  3    12 1199373
+##  4    11 1198512
+##  5    10  837663
+##  6     8  808197
+##  7     9  756373
+##  8     7  522529
+##  9     3  518588
+## 10     6  452653
+## 11     5  422161
+## 12     4  124340</code></pre>
+<ul>
+<li><p>Calculate the median number of cases
+(<code>positiveIncrease</code>) on the weekend by <code>month</code> in
+October and November 2020.</p></li>
+<li><p>Calculate the average number of death at different periods of a
+month (<code>month2</code> variable) in Fall 2020</p></li>
+<li><p>Compare the average number of hospitalizations between weekdays
+and weekends in Summer 2020</p></li>
+<li><p>Redo Questions 14 and 15 in <a href="assignment3.html">Assignment
+3</a> using the combos. Notice: you also need to use the data used in
+Assignment 3.</p></li>
+</ul>
+<hr />
+</div>
+<div id="combo-3-filter-group_by-summarise-arrange" class="section level4">
+<h4>9. Combo 3: filter + group_by + summarise + arrange</h4>
+<p>Use the arrange function to find a month that has the highest number
+of deaths on the weekend.</p>
+<hr />
+</div>
+<div id="use-your-own-dataset-and-implement-the-follows-functions-or-combos.-you-can-use-the-adult-census-income-or-titanic-data." class="section level4">
+<h4>10. Use your own dataset and implement the follows functions or
+combos. You can use the <a href="../data/adult_census.csv">Adult Census
+Income</a> or <a href="../data/titanic.csv">Titanic data</a>.</h4>
+<pre class="r"><code>library(tidyverse)
+df = read_csv(&#39;adult_census.csv&#39;)
+df %&gt;% select(-capital.gain)</code></pre>
+<pre><code>## # A tibble: 32,561 × 14
+##      age workclass   fnlwgt education    education.num marital.status occupation
+##    &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;                &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;     
+##  1    90 ?            77053 HS-grad                  9 Widowed        ?         
+##  2    82 Private     132870 HS-grad                  9 Widowed        Exec-mana…
+##  3    66 ?           186061 Some-college            10 Widowed        ?         
+##  4    54 Private     140359 7th-8th                  4 Divorced       Machine-o…
+##  5    41 Private     264663 Some-college            10 Separated      Prof-spec…
+##  6    34 Private     216864 HS-grad                  9 Divorced       Other-ser…
+##  7    38 Private     150601 10th                     6 Separated      Adm-cleri…
+##  8    74 State-gov    88638 Doctorate               16 Never-married  Prof-spec…
+##  9    68 Federal-gov 422013 HS-grad                  9 Divorced       Prof-spec…
+## 10    41 Private      70037 Some-college            10 Never-married  Craft-rep…
+## # ℹ 32,551 more rows
+## # ℹ 7 more variables: relationship &lt;chr&gt;, race &lt;chr&gt;, sex &lt;chr&gt;,
+## #   capital.loss &lt;dbl&gt;, hours.per.week &lt;dbl&gt;, native.country &lt;chr&gt;,
+## #   income &lt;chr&gt;</code></pre>
+<pre class="r"><code>df %&gt;% filter(income&gt;&#39;50K&#39;)</code></pre>
+<pre><code>## # A tibble: 0 × 15
+## # ℹ 15 variables: age &lt;dbl&gt;, workclass &lt;chr&gt;, fnlwgt &lt;dbl&gt;, education &lt;chr&gt;,
+## #   education.num &lt;dbl&gt;, marital.status &lt;chr&gt;, occupation &lt;chr&gt;,
+## #   relationship &lt;chr&gt;, race &lt;chr&gt;, sex &lt;chr&gt;, capital.gain &lt;dbl&gt;,
+## #   capital.loss &lt;dbl&gt;, hours.per.week &lt;dbl&gt;, native.country &lt;chr&gt;,
+## #   income &lt;chr&gt;</code></pre>
+<pre class="r"><code>df %&gt;% summarise(income = median(income))</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##   income
+##   &lt;chr&gt; 
+## 1 &lt;=50K</code></pre>
+<pre class="r"><code>df %&gt;% arrange(income)</code></pre>
+<pre><code>## # A tibble: 32,561 × 15
+##      age workclass   fnlwgt education    education.num marital.status occupation
+##    &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;                &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;     
+##  1    90 ?            77053 HS-grad                  9 Widowed        ?         
+##  2    82 Private     132870 HS-grad                  9 Widowed        Exec-mana…
+##  3    66 ?           186061 Some-college            10 Widowed        ?         
+##  4    54 Private     140359 7th-8th                  4 Divorced       Machine-o…
+##  5    41 Private     264663 Some-college            10 Separated      Prof-spec…
+##  6    34 Private     216864 HS-grad                  9 Divorced       Other-ser…
+##  7    38 Private     150601 10th                     6 Separated      Adm-cleri…
+##  8    68 Federal-gov 422013 HS-grad                  9 Divorced       Prof-spec…
+##  9    29 Private      77009 11th                     7 Separated      Sales     
+## 10    61 Private      29059 HS-grad                  9 Divorced       Sales     
+## # ℹ 32,551 more rows
+## # ℹ 8 more variables: relationship &lt;chr&gt;, race &lt;chr&gt;, sex &lt;chr&gt;,
+## #   capital.gain &lt;dbl&gt;, capital.loss &lt;dbl&gt;, hours.per.week &lt;dbl&gt;,
+## #   native.country &lt;chr&gt;, income &lt;chr&gt;</code></pre>
+<pre class="r"><code>df %&gt;% mutate(Yearsnotspentoneducation = age - education.num)</code></pre>
+<pre><code>## # A tibble: 32,561 × 16
+##      age workclass   fnlwgt education    education.num marital.status occupation
+##    &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;                &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;     
+##  1    90 ?            77053 HS-grad                  9 Widowed        ?         
+##  2    82 Private     132870 HS-grad                  9 Widowed        Exec-mana…
+##  3    66 ?           186061 Some-college            10 Widowed        ?         
+##  4    54 Private     140359 7th-8th                  4 Divorced       Machine-o…
+##  5    41 Private     264663 Some-college            10 Separated      Prof-spec…
+##  6    34 Private     216864 HS-grad                  9 Divorced       Other-ser…
+##  7    38 Private     150601 10th                     6 Separated      Adm-cleri…
+##  8    74 State-gov    88638 Doctorate               16 Never-married  Prof-spec…
+##  9    68 Federal-gov 422013 HS-grad                  9 Divorced       Prof-spec…
+## 10    41 Private      70037 Some-college            10 Never-married  Craft-rep…
+## # ℹ 32,551 more rows
+## # ℹ 9 more variables: relationship &lt;chr&gt;, race &lt;chr&gt;, sex &lt;chr&gt;,
+## #   capital.gain &lt;dbl&gt;, capital.loss &lt;dbl&gt;, hours.per.week &lt;dbl&gt;,
+## #   native.country &lt;chr&gt;, income &lt;chr&gt;, Yearsnotspentoneducation &lt;dbl&gt;</code></pre>
+<pre class="r"><code>df %&gt;% filter(workclass==&quot;Private&quot;)</code></pre>
+<pre><code>## # A tibble: 22,696 × 15
+##      age workclass fnlwgt education    education.num marital.status occupation  
+##    &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;                &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;       
+##  1    82 Private   132870 HS-grad                  9 Widowed        Exec-manage…
+##  2    54 Private   140359 7th-8th                  4 Divorced       Machine-op-…
+##  3    41 Private   264663 Some-college            10 Separated      Prof-specia…
+##  4    34 Private   216864 HS-grad                  9 Divorced       Other-servi…
+##  5    38 Private   150601 10th                     6 Separated      Adm-clerical
+##  6    41 Private    70037 Some-college            10 Never-married  Craft-repair
+##  7    45 Private   172274 Doctorate               16 Divorced       Prof-specia…
+##  8    52 Private   129177 Bachelors               13 Widowed        Other-servi…
+##  9    32 Private   136204 Masters                 14 Separated      Exec-manage…
+## 10    46 Private    45363 Prof-school             15 Divorced       Prof-specia…
+## # ℹ 22,686 more rows
+## # ℹ 8 more variables: relationship &lt;chr&gt;, race &lt;chr&gt;, sex &lt;chr&gt;,
+## #   capital.gain &lt;dbl&gt;, capital.loss &lt;dbl&gt;, hours.per.week &lt;dbl&gt;,
+## #   native.country &lt;chr&gt;, income &lt;chr&gt;</code></pre>
+<pre class="r"><code>df %&gt;% count(sex)</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   sex        n
+##   &lt;chr&gt;  &lt;int&gt;
+## 1 Female 10771
+## 2 Male   21790</code></pre>
+<pre class="r"><code>df %&gt;% group_by(occupation)</code></pre>
+<pre><code>## # A tibble: 32,561 × 15
+## # Groups:   occupation [15]
+##      age workclass   fnlwgt education    education.num marital.status occupation
+##    &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;                &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;     
+##  1    90 ?            77053 HS-grad                  9 Widowed        ?         
+##  2    82 Private     132870 HS-grad                  9 Widowed        Exec-mana…
+##  3    66 ?           186061 Some-college            10 Widowed        ?         
+##  4    54 Private     140359 7th-8th                  4 Divorced       Machine-o…
+##  5    41 Private     264663 Some-college            10 Separated      Prof-spec…
+##  6    34 Private     216864 HS-grad                  9 Divorced       Other-ser…
+##  7    38 Private     150601 10th                     6 Separated      Adm-cleri…
+##  8    74 State-gov    88638 Doctorate               16 Never-married  Prof-spec…
+##  9    68 Federal-gov 422013 HS-grad                  9 Divorced       Prof-spec…
+## 10    41 Private      70037 Some-college            10 Never-married  Craft-rep…
+## # ℹ 32,551 more rows
+## # ℹ 8 more variables: relationship &lt;chr&gt;, race &lt;chr&gt;, sex &lt;chr&gt;,
+## #   capital.gain &lt;dbl&gt;, capital.loss &lt;dbl&gt;, hours.per.week &lt;dbl&gt;,
+## #   native.country &lt;chr&gt;, income &lt;chr&gt;</code></pre>
+<ul>
+<li>select</li>
+<li>filter</li>
+<li>mutate</li>
+<li>summarise</li>
+<li>arrange</li>
+<li>count</li>
+<li>count + arrange</li>
+<li>filter + count + arrange</li>
+<li>group_by + summarise</li>
+<li>filter + group_by + summarise</li>
+<li>filter + group_by + summarise + arrange</li>
+</ul>
 </div>
 
 
