@@ -1,0 +1,98 @@
+
+---
+output: # rmarkdown::github_document
+  html_document:
+    theme: cerulean
+    toc: true
+  pdf_document: default
+  word_document: default
+title: "Assignment 5: Part 1"
+---
+
+***How to do it?***: 
+
+- Open the Rmarkdown file of this assignment ([link](assignment5_part1.Rmd)) in Rstudio. 
+
+- Right under each **question**, insert  a code chunk (you can use the hotkey `Ctrl + Alt + I` to add a code chunk) and code the solution for the question. 
+
+- `Knit` the rmarkdown file (hotkey: `Ctrl + Alt + K`) to export an html.  
+
+-  Publish the html file to your Githiub Page. 
+
+***Submission***: Submit the link on Github of the assignment to Canvas. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE)
+```
+
+-------
+
+**The data:** 
+
+This assignment works with the Adult Census Data that can be downloaded at [this link.](https://bryantstats.github.io/math421/data/adult_census_missing.csv)
+
+-------
+
+**Questions**
+
+1. Use `read_csv` to import the data.  Show the number of NAs for each columns.
+```{r}
+df = read_csv('adult_census_missing.csv')
+```
+
+
+2. Using function `aggr` the VIM package to plot the number of NAs for each column. 
+```{r}
+install.packages("VIM")
+library(VIM)
+aggr(df)
+```
+
+
+3. Find other forms of missing values. Hint: You can use the `table` function to check if there are suspicious categories (Unknown, for example) in a variable. What all other forms of missing values shown in the data. 
+```{r}
+df <- replace(df, df == 'Unknown' |
+                  df == 'Not Known' |
+            df == '?' , NA)
+aggr(df)
+df2 = drop_na(df)
+view(df2)
+"29,865"
+```
+```{r}
+df3 = df %>% fill(workclass, education, marital.status,occupation,relationship,native.country, .direction = 'updown')
+
+```
+
+
+```{r}
+
+df4 = df
+
+median_age <- median(df4$age, na.rm=TRUE)
+df4$age <- replace_na(df4$age, median_age)
+median_capital.gain <- median(df4$capital.gain, na.rm=TRUE)
+df4$capital.gain <- replace_na(df4$capital.gain, median_capital.gain)
+majority_workclass <- names(which.max(table(df$workclass)))
+df4$workclass <- replace_na(df4$workclass, majority_workclass)
+majority_education <- names(which.max(table(df$education)))
+df4$education <- replace_na(df4$education, majority_education)
+majority_marital.status <- names(which.max(table(df4$marital.status)))
+df4$marital.status <- replace_na(df4$marital.status, majority_marital.status)
+majority_occupation <- names(which.max(table(df4$occupation)))
+df4$occupation <- replace_na(df4$occupation, majority_occupation)
+majority_relationship <- names(which.max(table(df$relationship)))
+df4$relationship <- replace_na(df4$relationship, majority_relationship)
+majority_sex <- names(which.max(table(df4$sex)))
+df4$sex <- replace_na(df4$sex, majority_sex)
+majority_capital.gain <- names(which.max(table(df4$capital.gain)))
+df4$capital.gain <- replace_na(df4$capital.gain, majority_capital.gain)
+majority_native.country <- names(which.max(table(df4$native.country)))
+df4$native.country <- replace_na(df4$native.country, majority_native.country)
+```
+
+
+
+
+
+
