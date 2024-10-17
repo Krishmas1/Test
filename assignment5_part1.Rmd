@@ -37,13 +37,13 @@ This assignment works with the Adult Census Data that can be downloaded at [this
 
 1. Use `read_csv` to import the data.  Show the number of NAs for each columns.
 ```{r}
+library(tidyverse)
 df = read_csv('adult_census_missing.csv')
 ```
 
 
 2. Using function `aggr` the VIM package to plot the number of NAs for each column. 
 ```{r}
-install.packages("VIM")
 library(VIM)
 aggr(df)
 ```
@@ -60,7 +60,9 @@ view(df2)
 "29,865"
 ```
 ```{r}
-df3 = df %>% fill(workclass, education, marital.status,occupation,relationship,native.country, .direction = 'updown')
+df3 = df %>% fill(workclass, education, marital.status,occupation,relationship,native.country,sex, .direction = 'updown')
+
+colSums(is.na(df3))
 
 ```
 
@@ -72,6 +74,7 @@ df4 = df
 median_age <- median(df4$age, na.rm=TRUE)
 df4$age <- replace_na(df4$age, median_age)
 median_capital.gain <- median(df4$capital.gain, na.rm=TRUE)
+
 df4$capital.gain <- replace_na(df4$capital.gain, median_capital.gain)
 majority_workclass <- names(which.max(table(df$workclass)))
 df4$workclass <- replace_na(df4$workclass, majority_workclass)
@@ -89,6 +92,8 @@ majority_capital.gain <- names(which.max(table(df4$capital.gain)))
 df4$capital.gain <- replace_na(df4$capital.gain, majority_capital.gain)
 majority_native.country <- names(which.max(table(df4$native.country)))
 df4$native.country <- replace_na(df4$native.country, majority_native.country)
+
+colSums(is.na(df4))
 ```
 
 
