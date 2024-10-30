@@ -12,3 +12,6 @@ First Assignment: [Test](Test.html),
 
 [assignment5_part2](assignment5_part2.html)
 
+[assignment6](assignment6.html)
+
+
