@@ -1,4 +1,3 @@
-
 ---
 title: "Assignment 7 - Visualization - Some aspects of ggplot2"
 format: html
@@ -29,13 +28,52 @@ Use the data of your own. Produce the following types of plots and comment on ea
 
 1.  Make a plot using `facet_wrap` by one categorical variable (`facet_wrap(~variable1)`)
 
+    ```{r}
+    library(tidyverse)
+    library(knitr)
+    library(ggplot2)
+    df <- read_csv('https://bryantstats.github.io/math421/data/titanic.csv')
+    df <- df %>% 
+      mutate(Survived = as.character(Survived),
+             Pclass = as.character(Pclass))
+    ```
+
+    ```{r}
+    df %>% ggplot()+ 
+      geom_point(mapping=aes(x=Age, y=Fare))+
+      facet_wrap(~Sex)
+    ```
+
 2.  Make a plot using `facet_wrap` by two categorical variables (`facet_wrap(~variable1+variable2)`)
+
+    ```{r}
+    df %>% ggplot()+ 
+      geom_point(mapping=aes(x=Age, y=Fare))+
+      facet_wrap(~Pclass+Survived)
+    ```
 
 3.  Make a plot using `position ='dodge'`.
 
+    ```{r}
+    df %>% ggplot()+ 
+      geom_bar(mapping=aes(x=Pclass, fill=Survived), 
+               position = 'dodge')
+    ```
+
 4.  Make a plot using `position ='fill'`.
 
+    ```{r}
+    df %>% ggplot()+ 
+      geom_bar(mapping=aes(x=Pclass, fill=Survived), 
+               position = 'fill')
+    ```
+
 5.  Make a plot using `geom_col`.
+
+    ```{r}
+    df %>% ggplot()+ 
+      geom_col(mapping=aes(x=Pclass, y =Survived)
+    ```
 
 6.  Change the theme of one of your plots.
 
