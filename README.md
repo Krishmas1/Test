@@ -24,6 +24,14 @@ First Assignment: [Test](Test.html),
 
 [assignment12](assignment12.html)
 
+[midterm_toc](midterm_toc.html)
+
+[midterm_toc](midterm_toc.html)
+
+[Presentation_Midterm](Presentation_Midterm.html)
+
+
+
 
 
 

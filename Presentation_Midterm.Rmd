@@ -1,0 +1,54 @@
+---
+title: "Midterm Project: MATH421"
+author: "Krish Midha"
+date: "2024-12-02"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(viridis)
+```
+
+
+![](image2.png){width=80%}
+---
+![](image3.png){width=80%}
+---
+![](image4.png){width=80%}
+---
+![](image5.png){width=80%}
+---
+![](image6.png){width=80%}
+---
+![](image7.png){width=80%}
+---
+![](image8.png){width=80%}
+---
+![](image9.png){width=80%}
+---
+![](image10.png){width=80%}
+---
+![](image12.png){width=80%}
+---
+![](image13.png){width=80%}
+---
+![](image14.png){width=80%}
+---
+![](image15.png){width=80%}
+---
+![](image16.png){width=80%}
+---
+# Challenges
+
+- It was difficult working with so much code, realized I had to separate into smaller chunks
+-Difficult to vary graphs, tried to think of relevant, but unobvious combinations
+-Part 3 took very long to run
+
+---
+
+
+
+
+
+
