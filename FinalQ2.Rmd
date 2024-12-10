@@ -1,0 +1,119 @@
+---
+title: "FinalQ2"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    logo: final.png
+    source_code: embed
+    social: menu
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(plotly)
+library(knitr)
+library(DT)
+df <- read_csv('Sleep_health_and_lifestyle_dataset.csv')
+p <- df %>% 
+  mutate(stress_lvl = factor(stress_lvl)) %>% 
+  ggplot()+ 
+  geom_bar(mapping=aes(x=Gender, fill= stress_lvl), 
+           position = 'fill')+
+  labs(y='Proportion', fill= 'Stress Level')
+
+
+p1 <- df %>% 
+  mutate(stress_lvl = factor(stress_lvl)) %>% 
+  ggplot()+ 
+  geom_density(mapping=aes(x=Age))+
+  facet_wrap(~sleep_disorder)
+p2 <- df %>% 
+  ggplot()+ 
+  geom_bar(mapping=aes(x=Gender))
+```
+
+{.sidebar}
+=======================================================================
+
+
+### US Census Data
+
+Here is information and analysis on the US census data.
+
+Main Tab 1
+=======================================================================
+
+Column {data-width=500, .tabset}
+-----------------------------------------------------------------------
+
+### Column Tab 1
+
+```{r}
+df
+```
+
+
+### Column Tab 2
+
+```{r}
+kable(df)
+```
+
+
+### Column Tab 3
+
+```{r}
+datatable(df, options = list(
+  pageLength = 25
+))
+```
+
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Row 1
+
+```{r}
+p
+```
+
+### Row 2
+
+```{r}
+ggplotly(p)
+```
+
+Main Tab 2
+=======================================================================
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+
+### Row 3
+```{r}
+p1
+```
+
+```{r}
+ggplotly(p1)
+```
+
+Main Tab 3
+=======================================================================
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Row 4
+```{r}
+p2
+```
+
+```{r}
+ggplotly(p2)
+```
+
