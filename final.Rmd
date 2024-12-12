@@ -1,0 +1,69 @@
+
+---
+output: 
+  html_document:
+  pdf_document: default
+  word_document: default
+title: "Final Project - Building Interactive Dashboard"
+---
+
+------------------------------------------------------------------------
+
+**Submission Guideline:** Create one html file from Rmarkdown that answer all the following questions. **Each question should has it own Rmd file and a corresponding link**. Include the link of the html file to your Github webpage and submit the link to the html file to Canvas.
+
+------------------------------------------------------------------------
+
+### Question 1.
+
+ https://krishmas1.github.io/Test/FinalQ1.html
+
+### Question 2.
+
+https://krishmas1.github.io/Test/FinalQ2.html  
+
+### Question 3.
+
+https://krishmidha.shinyapps.io/1_flex_select_Q3/ 
+
+### Question 4 - selectInput
+
+https://krishmidha.shinyapps.io/FinalQ4/ 
+
+### Question 5 - checkboxGroupInput
+
+https://krishmidha.shinyapps.io/FinalQ5/ 
+
+### Question 6 - sliderInput
+
+Include the link of your dashboard here:
+
+https://krishmidha.shinyapps.io/FinalQ6/ 
+
+### Question 7 - radioButtons
+
+Include the link of your dashboard here:
+
+https://krishmidha.shinyapps.io/FinalQ7/
+
+### Question 8 - dateRangeInput
+
+https://krishmidha1.shinyapps.io/FinalQ8/ 
+
+### Question 9 - Combination of Inputs
+
+Include the link of your dashboard here: 
+
+https://krishmidha1.shinyapps.io/FinalQ9/
+
+### Question 10
+
+Include the link of your dashboard here:
+
+https://krishmidha1.shinyapps.io/FinalQ10/
+
+------------------------------------------------------------------------
+
+
+
+
+

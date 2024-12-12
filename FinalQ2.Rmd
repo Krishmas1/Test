@@ -38,9 +38,9 @@ p2 <- df %>%
 =======================================================================
 
 
-### US Census Data
+### Sleep Data
 
-Here is information and analysis on the US census data.
+Here is information and analysis on sleep health/lifestyle data.
 
 Main Tab 1
 =======================================================================
